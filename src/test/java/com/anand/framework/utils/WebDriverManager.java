@@ -10,8 +10,15 @@ public class WebDriverManager {
     public static WebDriver getDriver() {
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--start-maximized");
+
+            // If running in CI, set headless mode
+            if (System.getProperty("browser") != null &&
+                    System.getProperty("browser").equalsIgnoreCase("headless")) {
+                options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
+            }
+
             driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
         }
         return driver;
     }
